@@ -10,3 +10,141 @@ body, canvas {
   display: block;
   background: #000;
 }
+
+/* ── Context Menu ── */
+
+#shadygreen-ctx {
+  width: 220px;
+  background: #141b22;
+  border: 0.5px solid rgba(99, 255, 132, 0.18);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.6),
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  animation: ctx-in 0.12s ease-out;
+}
+
+@keyframes ctx-in {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+.ctx-cursor {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.4);
+  top: -14px;
+  left: 14px;
+}
+
+.ctx-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 6px;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+}
+
+.ctx-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #63ff84;
+  box-shadow: 0 0 6px rgba(99, 255, 132, 0.9);
+  flex-shrink: 0;
+}
+
+.ctx-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(99, 255, 132, 0.5);
+  font-weight: 500;
+}
+
+.ctx-section {
+  padding: 4px 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+}
+
+.ctx-section:last-child {
+  border-bottom: none;
+}
+
+.ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.ctx-item i {
+  font-size: 14px;
+  width: 16px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.1s;
+}
+
+.ctx-item span {
+  flex: 1;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.1s;
+}
+
+.ctx-item kbd {
+  font-size: 10px;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.04em;
+  background: none;
+  border: none;
+}
+
+.ctx-item:hover {
+  background: rgba(99, 255, 132, 0.07);
+}
+
+.ctx-item:hover i,
+.ctx-item:hover span {
+  color: #e8ffe0;
+}
+
+.ctx-item:hover i {
+  color: #63ff84;
+}
+
+.ctx-item.active {
+  background: rgba(99, 255, 132, 0.1);
+}
+
+.ctx-item.active span {
+  color: #63ff84;
+  font-weight: 500;
+}
+
+.ctx-item.active i {
+  color: #63ff84;
+}
+
+.ctx-item.danger:hover {
+  background: rgba(255, 80, 80, 0.08);
+}
+
+.ctx-item.danger:hover i,
+.ctx-item.danger:hover span {
+  color: #ff9090;
+}
+
+.ctx-item.danger:hover i {
+  color: #ff6060;
+}
