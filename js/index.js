@@ -39,33 +39,31 @@ composer.addPass(bloomPass);
 
 // --- SHARED GRASS LOGIC (The R&D Engine) ---
 
-const grassUniforms = { uTime: { value: 0 } };
-
 function applyGrassShader(material) {
   material.onBeforeCompile = (shader) => {
-    shader.uniforms.uTime = grassUniforms.uTime;
-    shader.vertexShader = `uniform float uTime;\n` + shader.vertexShader;
-
+    shader.vertexShader = `varying vec2 vUv;\n` + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace(
       '#include <begin_vertex>',
       `
-      #ifdef USE_INSTANCING
-        vec3 worldPos = instanceMatrix[3].xyz;
-      #else
-        vec3 worldPos = (modelMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-      #endif
-
-      // Wind calculation based on world position
-      float wind = sin(uTime * .005 + worldPos.x * 0.2 + worldPos.z * 0.2) * pow(uv.y, 2.5) * 0.7;
-      vec3 transformed = vec3( position );
-      transformed.x += wind;
+      vUv = uv;
+      vec3 transformed = vec3(position);
+      `
+    );
+    shader.fragmentShader = `varying vec2 vUv;\n` + shader.fragmentShader;
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <color_fragment>',
+      `
+      vec3 tipColor  = vec3(0.45, 0.70, 0.12); // Crisp, manicured lawn green
+      vec3 baseColor = vec3(0.05, 0.15, 0.02); // Darker shadow at the roots
+      vec3 grassColor = mix(baseColor, tipColor, vUv.y);
+      diffuseColor.rgb = grassColor;
       `
     );
   };
 }
 
 // Master Geometry (Used for both single and field)
-const bladeGeo = new THREE.PlaneGeometry(0.015, 0.6, 1, 4).translate(0, 0.3, 0);
+const bladeGeo = new THREE.PlaneGeometry(0.015, 0.2, 1, 4).translate(0, 0.14, 0);
 
 // --- 1. THE HERO BLADE (Single) ---
 const heroMat = new THREE.MeshStandardMaterial({ color: 0x7fff00, side: THREE.DoubleSide });
@@ -148,7 +146,6 @@ function showContextMenu(x, y) {
 
 // --- RENDER LOOP ---
 function animate(time) {
-  grassUniforms.uTime.value = time * 0.001; 
   orbit.update();
   composer.render();
   requestAnimationFrame(animate);
